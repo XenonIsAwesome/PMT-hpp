@@ -60,11 +60,10 @@ int main() {
     static constexpr size_t n_items = 10;
     std::vector<std::complex<float>> samples = random_vcf(n_items);
     pmt::pmt_t vec = pmt::init_c32vector(n_items, samples.data());
-    print_hex(vec);
 
     // 3. Make the PDU (pair of meta and vec)
     pmt::pmt_t pdu = pmt::cons(metadata, vec);
 
     write_bin_file("pdu.bin", pdu);
-    // print_hex(pdu);
+    print_hex(pdu);
 }

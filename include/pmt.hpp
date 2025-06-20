@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <cstdint>
+#include <complex>
 
 
 namespace pmt {
@@ -79,8 +81,8 @@ PMT_TYPE_TAGS
     template<>
     void from<double>(pmt_t &pmt, double value);
 
-    pmt_t init_c32vector(uint32_t n_items, std::complex<float>* data);
-    pmt_t init_c64vector(uint32_t n_items, std::complex<double>* data);
+    pmt_t init_c32vector(uint32_t n_items, const std::complex<float>* data);
+    pmt_t init_c64vector(uint32_t n_items, const std::complex<double>* data);
     /// TODO: add all the vectors
 
 }
@@ -156,7 +158,7 @@ void pmt::dict_add(pmt_t &pmt, const std::string &key, T value) {
     from<T>(pmt, value);
 }
 
-inline pmt::pmt_t pmt::init_c32vector(uint32_t n_items, std::complex<float> *data) {
+inline pmt::pmt_t pmt::init_c32vector(uint32_t n_items, const std::complex<float> *data) {
     pmt_t pmt;
 
     pmt += type_tags::PMT_C32VECTOR;
@@ -165,7 +167,7 @@ inline pmt::pmt_t pmt::init_c32vector(uint32_t n_items, std::complex<float> *dat
 
     return pmt;
 }
-inline pmt::pmt_t pmt::init_c64vector(uint32_t n_items, std::complex<double> *data) {
+inline pmt::pmt_t pmt::init_c64vector(uint32_t n_items, const std::complex<double> *data) {
     pmt_t pmt;
 
     pmt += type_tags::PMT_C64VECTOR;
