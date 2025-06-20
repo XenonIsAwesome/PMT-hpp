@@ -81,6 +81,7 @@ PMT_TYPE_TAGS
 
     pmt_t init_c32vector(uint32_t n_items, std::complex<float>* data);
     pmt_t init_c64vector(uint32_t n_items, std::complex<double>* data);
+    /// TODO: add all the vectors
 
 }
 
