@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 
-#include "pmt.h"
+#include "pmt.hpp"
 
 std::vector<std::complex<float>> random_vcf(size_t n_items) {
     std::vector<std::complex<float>> result;
