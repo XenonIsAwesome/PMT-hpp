@@ -51,15 +51,14 @@ bool write_bin_file(const std::string& filename, const std::string& data) {
 
 int main() {
     // 1. Make the metadata dictionary with the timetag
-    pmt::pmt_t metadata;
-
-    pmt::make_dict(metadata);
-    pmt::dict_add(metadata, "timetag", 123.456f);
+    pmt::pmt_t metadata = pmt::make_dict();
+    pmt::dict_add(metadata, "timetag", 123.456);
+    pmt::dict_add(metadata, "freq", 10e6);
 
     // 2. Convert the vector to a uniform vector PMT (complex float/double)
-    static constexpr size_t n_items = 10;
+    static constexpr size_t n_items = 11;
     std::vector<std::complex<float>> samples = random_vcf(n_items);
-    pmt::pmt_t vec = pmt::init_c32vector(n_items, samples.data());
+    pmt::pmt_t vec = pmt::init_vector(n_items, samples.data());
 
     // 3. Make the PDU (pair of meta and vec)
     pmt::pmt_t pdu = pmt::cons(metadata, vec);
