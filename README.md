@@ -64,7 +64,7 @@ pmt::pmt_t make_pdu(std::complex<float>* samples, size_t n_samples, float timeta
    pmt::dict_add(meta, "timetag", timetag);
    
    // 2. Creating the vector pmt.
-   pmt::pmt_t vec = pmt::init_c32vector(n_samples, samples);
+   pmt::pmt_t vec = pmt::init_vector(n_samples, samples.data());
    
    // 3. Combining into PDU
    pmt::pmt_t pdu = pmt::cons(meta, vec);
