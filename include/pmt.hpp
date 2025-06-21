@@ -16,6 +16,11 @@ namespace pmt {
             return value;
         }
 
+        /**
+         * Generic function for swapping endianess of 16-bit values
+         * @param value 16-bit value
+         * @return 16-bit value in swapped endianess
+         */
         template<>
         inline uint16_t swap_endianess(const uint16_t value) {
             return (value >> 8) | (value << 8);
@@ -23,9 +28,15 @@ namespace pmt {
 
         template<>
         inline int16_t swap_endianess(const int16_t value) {
+            /// Casting to uint16_t and back to take adventage of the existing uint16_t function.
             return static_cast<int16_t>(swap_endianess(static_cast<uint16_t>(value)));
         }
 
+        /**
+         * Generic function for swapping endianess of 32-bit values
+         * @param value 32-bit value
+         * @return 32-bit value in swapped endianess
+         */
         template<>
         inline uint32_t swap_endianess(const uint32_t value) {
             return ((value & 0x000000FF) << 24) |
@@ -36,9 +47,15 @@ namespace pmt {
 
         template<>
         inline int32_t swap_endianess(const int32_t value) {
+            /// Casting to uint32_t and back to take adventage of the existing uint32_t function.
             return static_cast<int32_t>(swap_endianess(static_cast<uint32_t>(value)));
         }
 
+        /**
+         * Generic function for swapping endianess of 64-bit values
+         * @param value 64-bit value
+         * @return 64-bit value in swapped endianess
+         */
         template<>
         inline uint64_t swap_endianess(const uint64_t value) {
             return ((value & 0x00000000000000FFULL) << 56) |
@@ -53,11 +70,13 @@ namespace pmt {
 
         template<>
         inline int64_t swap_endianess(const int64_t value) {
+            /// Casting to uint64_t and back to take adventage of the existing uint64_t function.
             return static_cast<int64_t>(swap_endianess(static_cast<uint64_t>(value)));
         }
 
         template<>
         inline float swap_endianess(const float value) {
+            /// Casting to uint32_t and back to take adventage of the existing uint32_t function.
             uint32_t ival = *reinterpret_cast<const uint32_t *>(&value);
             ival = swap_endianess<uint32_t>(ival);
 
@@ -66,6 +85,7 @@ namespace pmt {
 
         template<>
         inline double swap_endianess(const double value) {
+            /// Casting to uint64_t and back to take adventage of the existing uint64_t function.
             uint64_t ival = *reinterpret_cast<const uint64_t *>(&value);
             ival = swap_endianess<uint64_t>(ival);
 
@@ -74,6 +94,7 @@ namespace pmt {
 
         template<>
         inline std::complex<float> swap_endianess(const std::complex<float> value) {
+            /// Swapping endianess of each float as required by the PMT.
             return {
                 swap_endianess<float>(value.real()),
                 swap_endianess<float>(value.imag())
@@ -82,6 +103,7 @@ namespace pmt {
 
         template<>
         inline std::complex<double> swap_endianess(const std::complex<double> value) {
+            /// Swapping endianess of each double as required by the PMT.
             return {
                 swap_endianess<double>(value.real()),
                 swap_endianess<double>(value.imag())
@@ -175,20 +197,23 @@ namespace pmt {
     template<VectorItem T>
     pmt_t init_vector(uint32_t n_items, const T *data);
 
-    /// TODO: add all the vectors
     /// TODO: add tuple support
 
 }
 
 inline pmt::pmt_t pmt::make_dict() {
+    /// Does nothing in my implementation besides createing an empty pmt_t
     pmt_t pmt;
     return pmt;
 }
 
 template<typename T>
 void pmt::dict_add(pmt_t &pmt, const std::string &key, T value) {
+    /// Adding dict and pair type tags
     pmt += serial_tags::PMT_DICT;
     pmt += serial_tags::PMT_PAIR;
+
+    /// Appending key and value
     symbol(pmt, key);
     from<T>(pmt, value);
 }
@@ -200,6 +225,7 @@ inline pmt::pmt_t pmt::cons(const pmt_t& metadata, const pmt_t& vec) {
 
 template<typename T>
 void pmt::from(pmt_t &, T) {
+    /// Default function that throws not implemented
 #if defined(__clang__) || defined(__GNUC__)
     throw not_implemented(__PRETTY_FUNCTION__);
 #elif defined(_MSC_VER)
@@ -209,46 +235,63 @@ void pmt::from(pmt_t &, T) {
 
 template<>
 inline void pmt::from<bool>(pmt_t &pmt, bool value) {
+    /// Appending PMT_TRUE or PMT_FALSE based on the value
     pmt += value ? serial_tags::PMT_TRUE: serial_tags::PMT_FALSE;
 }
 
 template<>
 inline void pmt::from<int32_t>(pmt_t &pmt, int32_t value) {
-    pmt.append(serial_tags::PMT_INT32);
+    /// Appending int32_t type tag
+    pmt += serial_tags::PMT_INT32;
+
+    /// Appending value in big endian
     auto swapped_val = helpers::swap_endianess(value);
     pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(swapped_val));
 }
 
 template<>
 inline void pmt::from<size_t>(pmt_t &pmt, size_t value) {
-    pmt.append(serial_tags::PMT_UINT64);
+    /// Appending uint64_t type tag
+    pmt += serial_tags::PMT_UINT64;
+
+    /// Appending value in big endian
     auto swapped_val = helpers::swap_endianess(value);
     pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(swapped_val));
 }
 
 template<>
 inline void pmt::from<float>(pmt_t &pmt, float value) {
+    /// float == double in PMT
     from<double>(pmt, value);
 }
 
 template<>
 inline void pmt::from<double>(pmt_t &pmt, double value) {
+    /// Appending double type tag
+    pmt += serial_tags::PMT_DOUBLE;
+
+    /// Appending value in big endian
     auto swapped_val = helpers::swap_endianess(value);
-    pmt.append(serial_tags::PMT_DOUBLE);
     pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(swapped_val));
 }
 
 inline void pmt::symbol(pmt_t &pmt, const std::string &symbol) {
+    /// Appending symbol type tag
     pmt += serial_tags::PMT_SYMBOL;
+
+    /// Appending symbol size in big endian
     uint16_t symbol_size = helpers::swap_endianess(static_cast<uint16_t>(symbol.size()));
-    pmt.append(reinterpret_cast<char *>(&symbol_size), sizeof(uint16_t));  // Length of symbol
-    pmt += symbol;                           // Symbol data
+    pmt.append(reinterpret_cast<char *>(&symbol_size), sizeof(uint16_t));
+
+    /// Appending symbol
+    pmt += symbol;
 }
 
 template<pmt::VectorItem T>
 pmt::pmt_t pmt::init_vector(uint32_t n_items, const T *data) {
     pmt_t pmt;
 
+    /// Appending vector type tag
     pmt += serial_tags::PMT_UNIFORM_VECTOR;
     if constexpr (std::is_same_v<T, int8_t>) {
         pmt += serial_tags::uniform_vector::UVI_S8;
@@ -276,15 +319,18 @@ pmt::pmt_t pmt::init_vector(uint32_t n_items, const T *data) {
         pmt += serial_tags::uniform_vector::UVI_C64;
     }
 
+    /// Appending vector size in big endian
     auto size = helpers::swap_endianess(n_items);
     pmt.append(reinterpret_cast<const char *>(&size), sizeof(n_items));
+
     pmt += serial_tags::PMT_UNKNOWN_POST_VECTOR_LENGTH;
+
+    /// Append each item from the data in big endian
     for (size_t i = 0; i < n_items; i++) {
         const T val = data[i];
         T swapped_val = helpers::swap_endianess<T>(val);
         pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(swapped_val));
     }
-    // pmt.append(reinterpret_cast<const char*>(data), n_items * sizeof(std::complex<float>));
 
     return pmt;
 }
