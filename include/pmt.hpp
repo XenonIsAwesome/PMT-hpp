@@ -71,6 +71,22 @@ namespace pmt {
 
             return *reinterpret_cast<double *>(&ival);
         }
+
+        template<>
+        inline std::complex<float> swap_endianess(const std::complex<float> value) {
+            return {
+                swap_endianess<float>(value.real()),
+                swap_endianess<float>(value.imag())
+            };
+        }
+
+        template<>
+        inline std::complex<double> swap_endianess(const std::complex<double> value) {
+            return {
+                swap_endianess<double>(value.real()),
+                swap_endianess<double>(value.imag())
+            };
+        }
     }
 
     template<typename T>
@@ -263,7 +279,12 @@ pmt::pmt_t pmt::init_vector(uint32_t n_items, const T *data) {
     auto size = helpers::swap_endianess(n_items);
     pmt.append(reinterpret_cast<const char *>(&size), sizeof(n_items));
     pmt += serial_tags::PMT_UNKNOWN_POST_VECTOR_LENGTH;
-    pmt.append(reinterpret_cast<const char*>(data), n_items * sizeof(std::complex<float>));
+    for (size_t i = 0; i < n_items; i++) {
+        const T val = data[i];
+        T swapped_val = helpers::swap_endianess<T>(val);
+        pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(swapped_val));
+    }
+    // pmt.append(reinterpret_cast<const char*>(data), n_items * sizeof(std::complex<float>));
 
     return pmt;
 }
