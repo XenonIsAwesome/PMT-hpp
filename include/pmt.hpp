@@ -308,7 +308,7 @@ pmt::pmt_t pmt::init_vector(uint32_t n_items, const T *data) {
     } else if constexpr (std::is_same_v<T, int64_t>) {
         pmt += serial_tags::uniform_vector::UVI_S64;
     } else if constexpr (std::is_same_v<T, uint64_t>) {
-        pmt += serial_tags::uniform_vector::UVI_S64;
+        pmt += serial_tags::uniform_vector::UVI_U64;
     } else if constexpr (std::is_same_v<T, float>) {
         pmt += serial_tags::uniform_vector::UVI_F32;
     } else if constexpr (std::is_same_v<T, double>) {
