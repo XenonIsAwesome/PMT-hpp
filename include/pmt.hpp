@@ -129,26 +129,26 @@ namespace pmt {
         std::is_same_v<T, std::complex<double>>;
 
     namespace serial_tags {
-        static constexpr auto PMT_UNKNOWN_POST_VECTOR_LENGTH = std::string("\x01\x00", 2);
-        static constexpr auto PMT_TRUE = std::string("\x00", 1);
-        static constexpr auto PMT_FALSE = std::string("\x01", 1);
-        static constexpr auto PMT_SYMBOL = std::string("\x02", 1);
-        static constexpr auto PMT_INT32 = std::string("\x03", 1);
-        static constexpr auto PMT_DOUBLE = std::string("\x04", 1);
-        static constexpr auto PMT_COMPLEX = std::string("\x05", 1);
-        static constexpr auto PMT_NULL = std::string("\x06", 1);
-        static constexpr auto PMT_PAIR = std::string("\x07", 1);
-        static constexpr auto PMT_VECTOR = std::string("\x08", 1);
-        static constexpr auto PMT_DICT = std::string("\x09", 1);
+        static auto PMT_UNKNOWN_POST_VECTOR_LENGTH = std::string("\x01\x00", 2);
+        static auto PMT_TRUE = std::string("\x00", 1);
+        static auto PMT_FALSE = std::string("\x01", 1);
+        static auto PMT_SYMBOL = std::string("\x02", 1);
+        static auto PMT_INT32 = std::string("\x03", 1);
+        static auto PMT_DOUBLE = std::string("\x04", 1);
+        static auto PMT_COMPLEX = std::string("\x05", 1);
+        static auto PMT_NULL = std::string("\x06", 1);
+        static auto PMT_PAIR = std::string("\x07", 1);
+        static auto PMT_VECTOR = std::string("\x08", 1);
+        static auto PMT_DICT = std::string("\x09", 1);
 
         static constexpr auto PMT_UNIFORM_VECTOR = std::string("\x0a", 1);
         namespace uniform_vector {
-            static constexpr auto UVI_U8 = std::string("\x00", 1);
-            static constexpr auto UVI_S8 = std::string("\x01", 1);
-            static constexpr auto UVI_U16 = std::string("\x02", 1);
-            static constexpr auto UVI_S16 = std::string("\x03", 1);
-            static constexpr auto UVI_U32 = std::string("\x04", 1);
-            static constexpr auto UVI_S32 = std::string("\x05", 1);
+            static auto UVI_U8 = std::string("\x00", 1);
+            static auto UVI_S8 = std::string("\x01", 1);
+            static auto UVI_U16 = std::string("\x02", 1);
+            static auto UVI_S16 = std::string("\x03", 1);
+            static auto UVI_U32 = std::string("\x04", 1);
+            static auto UVI_S32 = std::string("\x05", 1);
             static constexpr auto UVI_U64 = std::string("\x06", 1);
             static constexpr auto UVI_S64 = std::string("\x07", 1);
             static constexpr auto UVI_F32 = std::string("\x08", 1);
@@ -206,6 +206,7 @@ namespace pmt {
 
 inline pmt::pmt_t pmt::make_dict() {
     /// Does nothing in my implementation besides createing an empty pmt_t
+    /// Exists only for compatibilty purposes
     pmt_t pmt;
     return pmt;
 }
