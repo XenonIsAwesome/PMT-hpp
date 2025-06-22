@@ -56,8 +56,6 @@ pmt::pmt_t make_pdu(const std::complex<float>* samples, size_t n_samples, float 
 | **UVI\_F64**            | `0a 09`            | Uniform vector subtype for `double`               |
 | **UVI\_C32**            | `0a 0a`            | Uniform vector subtype for `std::complex<float>`  |
 | **PMT\_C64**            | `0a 0b`            | Uniform vector subtype for `std::complex<double>` |
-| **PMT\_C64**            | `0a 0b`            | Uniform vector subtype for `std::complex<double>` |
-| **PMT\_C64**            | `0a 0b`            | Uniform vector subtype for `std::complex<double>` |
 
 ### PDU Structure
 > NOTE: All values are in big endian.
