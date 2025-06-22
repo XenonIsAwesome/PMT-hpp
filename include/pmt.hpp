@@ -29,7 +29,8 @@ namespace pmt {
         template<>
         inline int16_t swap_endianess(const int16_t value) {
             /// Casting to uint16_t and back to take adventage of the existing uint16_t function.
-            return static_cast<int16_t>(swap_endianess(static_cast<uint16_t>(value)));
+            const uint16_t swapped_val = swap_endianess(*reinterpret_cast<const uint16_t *>(&value));
+            return static_cast<const int16_t *>(&swapped_val);
         }
 
         /**
@@ -48,7 +49,8 @@ namespace pmt {
         template<>
         inline int32_t swap_endianess(const int32_t value) {
             /// Casting to uint32_t and back to take adventage of the existing uint32_t function.
-            return static_cast<int32_t>(swap_endianess(static_cast<uint32_t>(value)));
+            const uint32_t swapped_val = swap_endianess(*reinterpret_cast<const uint32_t *>(&value));
+            return static_cast<const int32_t *>(&swapped_val);
         }
 
         /**
@@ -71,7 +73,8 @@ namespace pmt {
         template<>
         inline int64_t swap_endianess(const int64_t value) {
             /// Casting to uint64_t and back to take adventage of the existing uint64_t function.
-            return static_cast<int64_t>(swap_endianess(static_cast<uint64_t>(value)));
+            const uint64_t swapped_val = swap_endianess(*reinterpret_cast<const uint64_t *>(&value));
+            return static_cast<const int64_t *>(&swapped_val);
         }
 
         template<>
