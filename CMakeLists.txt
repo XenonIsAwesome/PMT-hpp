@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.31)
-project(pmthpp)
+cmake_minimum_required(VERSION 3.18)
+project(PMT)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(pmthpp main.cpp)
+add_library(${PROJECT_NAME}_LIB INTERFACE)
+target_include_directories(${PROJECT_NAME}_LIB INTERFACE include/)
 
-add_executable(pmt-example example.cpp)
+# Example file
+add_executable(${PROJECT_NAME}-example example.cpp)
+target_link_libraries(${PROJECT_NAME}-example ${PROJECT_NAME}_LIB)
 
-target_include_directories(pmt-example PRIVATE include/)
-target_include_directories(pmthpp PRIVATE include/)
+# Playground for testing
+add_executable(${PROJECT_NAME}-playground main.cpp)
+target_link_libraries(${PROJECT_NAME}-playground ${PROJECT_NAME}_LIB)
