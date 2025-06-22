@@ -3,6 +3,7 @@ A single header library that mimics gnuradios PMT to allow building PDU (protoco
 
 ## Using the library
 ### Adding the library to your project 
+To use this library you have 2 options:
 1. Drag the header file into your project.
 2. Use this repository as a submodule and add link it to your project.
 ```cmake
