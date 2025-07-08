@@ -323,9 +323,12 @@ pmt::pmt_t pmt::init_vector(uint32_t n_items, const T *data) {
         pmt += serial_tags::uniform_vector::UVI_C64;
     }
 
+    /// Reserving first for performance
+    pmt.reserve(pmt.size() + n_items * sizeof(T));
+
     /// Appending vector size in big endian
     auto size = helpers::swap_endianess(n_items);
-    pmt.append(reinterpret_cast<const char *>(&size), sizeof(n_items));
+    pmt.append(reinterpret_cast<const char *>(&size), sizeof(uint32_t));
 
     pmt += serial_tags::PMT_UNKNOWN_POST_VECTOR_LENGTH;
 
@@ -333,7 +336,7 @@ pmt::pmt_t pmt::init_vector(uint32_t n_items, const T *data) {
     for (size_t i = 0; i < n_items; i++) {
         const T val = data[i];
         T swapped_val = helpers::swap_endianess<T>(val);
-        pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(swapped_val));
+        pmt.append(reinterpret_cast<const char *>(&swapped_val), sizeof(T));
     }
 
     return pmt;
